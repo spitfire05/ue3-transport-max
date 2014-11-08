@@ -4,6 +4,20 @@
 -- https://github.com/spitfire05/ue3-2-max-rotation-clipboard
 ----------------------------------------------------------------------------------------------
 
+--    This program is free software; you can redistribute it and/or modify
+--    it under the terms of the GNU General Public License as published by
+--    the Free Software Foundation; either version 2 of the License, or
+--    (at your option) any later version.
+--
+--    This program is distributed in the hope that it will be useful,
+--    but WITHOUT ANY WARRANTY; without even the implied warranty of
+--    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--    GNU General Public License for more details.
+--
+--    You should have received a copy of the GNU General Public License
+--    along with this program; if not, write to the Free Software
+--    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 ------------------------------------------------------
 -- Set the given object's rotation to the given values
 -- Source: http://lifeonthefrontier.blogspot.com/2009/04/it-is-very-surprising-to-me-how-hard-it.html
@@ -29,6 +43,12 @@ Assembly = dotNetClass "System.Reflection.Assembly"
 -- DLL path is not script dependant, until I find a solution to do so
 Assembly.loadfrom("Scripts\Startup\UE3Handler.dll")
 
+rollout rAbout "About"
+(
+ label lab1 "BF2 ColMesh Importer"
+ label lab2 "Version 1.2.0"
+ label lab3 "Copyright © Martijn Buijs, 2008"
+)
 
 macroscript UE3ClipBoardRotation category:"spitfire" \
 tooltip:"Get rotation from cliboard" \
