@@ -1,4 +1,4 @@
-ue3-2-max-rotation-clipboard
+ue3-2-max-transformation-clipboard
 ============================
 
 A script reading objects' rotation from UE3 clipboard and applying it to objects in 3ds Max
