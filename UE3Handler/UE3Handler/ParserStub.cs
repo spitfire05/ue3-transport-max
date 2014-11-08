@@ -4,6 +4,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Globalization;
+using System.Threading;
 
 namespace UE3Handler
 {
@@ -15,7 +17,8 @@ namespace UE3Handler
         {
             int major = Assembly.GetExecutingAssembly().GetName().Version.Major;
             int minor = Assembly.GetExecutingAssembly().GetName().Version.Minor;
-            return String.Format("{0}.{1}", major, minor);
+            int patch = Assembly.GetExecutingAssembly().GetName().Version.MajorRevision;
+            return String.Format("{0}.{1}.{2}", major, minor, patch);
         }
         
         public static List<Actor> parseFromClipboard()
@@ -27,8 +30,12 @@ namespace UE3Handler
         {
             var nameRegex = new Regex("Name=\"(.*)\"");
             var rotationRegex = new Regex(@"Rotation=\(Pitch=(-?\d+),Yaw=(-?\d+),Roll=(-?\d+)\)");
+            var positionRegex = new Regex(@"Location=\(X=(-?\d+.?\d*),Y=(-?\d+.?\d*),Z=(-?\d+.?\d*)\)");
 
             var actors = new List<Actor>();
+
+            // Mkae sure we read the numbers correctly
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             using (StringReader reader = new StringReader(data))
             {
@@ -111,6 +118,21 @@ namespace UE3Handler
                         curActor.Rotation.x = Math.Round(xd, 2);
                         curActor.Rotation.y = Math.Round(yd, 2);
                         curActor.Rotation.z = Math.Round(zd, 2);
+                        continue;
+                    }
+
+                    // Position
+                    if (positionRegex.IsMatch(line))
+                    {
+                        var matches = positionRegex.Matches(line);
+                        double x, y, z;
+                        double.TryParse(matches[0].Groups[1].Value, out x);
+                        double.TryParse(matches[0].Groups[2].Value, out y);
+                        double.TryParse(matches[0].Groups[3].Value, out z);
+
+                        curActor.Position.x = x;
+                        curActor.Position.y = y;
+                        curActor.Position.z = z;
                         continue;
                     }
                 }
