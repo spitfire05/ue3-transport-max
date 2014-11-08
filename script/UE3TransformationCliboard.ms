@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------------------
 -- UE3 to 3ds Max Rotation cliboard script
 -- A script reading objects' rotation from UE3 clipboard and applying it to objects in 3ds Max
--- https://github.com/spitfire05/ue3-2-max-rotation-clipboard
+-- https://github.com/spitfire05/ue3-2-max-transformation-clipboard
 ----------------------------------------------------------------------------------------------
 
 --    This program is free software; you can redistribute it and/or modify
