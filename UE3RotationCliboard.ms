@@ -1,3 +1,9 @@
+----------------------------------------------------------------------------------------------
+-- UE3 to 3ds Max Rotation cliboard script
+-- A script reading objects' rotation from UE3 clipboard and applying it to objects in 3ds Max
+-- https://github.com/spitfire05/ue3-2-max-rotation-clipboard
+----------------------------------------------------------------------------------------------
+
 ------------------------------------------------------
 -- Set the given object's rotation to the given values
 -- Source: http://lifeonthefrontier.blogspot.com/2009/04/it-is-very-surprising-to-me-how-hard-it.html
@@ -20,7 +26,8 @@ fn SetObjectRotation obj rx ry rz =
 clearlistener()
 
 Assembly = dotNetClass "System.Reflection.Assembly"
-Assembly.loadfrom("C:\Users\spitfire\Documents\UE3Handler\UE3Handler\bin\Release\UE3Handler.dll")
+-- DLL path is not script dependant, until I find a solution to do so
+Assembly.loadfrom("Scripts\Startup\UE3Handler.dll")
 
 
 macroscript UE3ClipBoardRotation category:"spitfire" \
@@ -38,9 +45,6 @@ buttontext: "Get rotation from cliboard"
 			(
 				format "% -- % % %\n" obj.Name obj.Rotation.x obj.Rotation.y obj.Rotation.z
 				
-				--select (getNodeByName obj.Name)
-				--$.rotation = (eulerangles obj.Rotation.z obj.Rotation.x obj.Rotation.y)
-				--rotate $ (eulerangles obj.Rotation.z obj.Rotation.x obj.Rotation.y)
 				maxObj = (getNodeByName obj.Name)
 				if maxObj != undefined then
 				(
@@ -71,6 +75,7 @@ buttontext: "About"
 -- add UI
 subMenuName = "UE3 Rotation Clipboard"
 
+-- clean up old menu
 if ((menuMan.findMenu subMenuName) != undefined) then 
 (
 	menuMan.unRegisterMenu (menuMan.findMenu subMenuName)
