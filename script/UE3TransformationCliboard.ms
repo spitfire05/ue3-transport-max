@@ -45,33 +45,42 @@ fn SetObjectRotation obj rx ry rz =
     rotate obj (angleaxis rz [0,0,1])
 )
 
-fn ApplyUE pos rot =
+fn ApplyUE pos rot relPos =
 (
-	result = parser.parseFromClipboard()
-	r = result.ToArray()
-	for obj in (r) do
+	try
 	(
-		print obj.Name
-		print (obj.Location.ToString())
-		print (obj.Rotation.ToString())
-		
-		maxObj = (getNodeByName obj.Name)
-		if maxObj != undefined then
+		result = parser.parseFromClipboard()
+		if (pos and relPos) then
 		(
-			if pos then
-			(
-				maxObj.position = [obj.Location.x, obj.Location.y, obj.Location.z]
-			)--end if
-			if rot then
-			(
-				SetObjectRotation maxObj obj.Rotation.z obj.Rotation.x obj.Rotation.y
-			)--end if
+			result = parser.convertVectorsToRelativeFromGeometricalCenter(result)
 		)--end if
-		else
+		r = result.ToArray()
+		for obj in (r) do
 		(
-			messagebox ("No object found: " + obj.Name)
-		)--end else
-	)--end for
+			print obj.Name
+			print (obj.Location.ToString())
+			print (obj.Rotation.ToString())
+			
+			maxObj = (getNodeByName obj.Name)
+			if maxObj != undefined then
+			(
+				if pos then
+				(
+					maxObj.position = [obj.Location.x, obj.Location.y, obj.Location.z]
+				)--end if
+				if rot then
+				(
+					SetObjectRotation maxObj obj.Rotation.z obj.Rotation.x obj.Rotation.y
+				)--end if
+			)--end if
+			else
+			(
+				messagebox ("No object found: " + obj.Name)
+			)--end else
+		)--end for
+	) catch (
+		messagebox (getCurrentException())
+	)
 )--end function
 
 -- main macroscript
@@ -85,7 +94,7 @@ buttontext: "Open dialog..."
 		try (removeRollout rUE) catch ()
 		try (removeRollout rAbout) catch ()
 		try (closeRolloutFloter cmImp) catch ()
-		cmImp = newRolloutFloater "UE3 Transformation Clipboard" 210 150
+		cmImp = newRolloutFloater "UE3 Transformation Clipboard" 240 180
 		print cmImp
 		print rUE
 		print rAbout
@@ -100,12 +109,13 @@ rollout rUE "UE3 Transformation Clipboard"
 	group "Import"
 	(
 		checkbox posCbox "Import position" checked: true
-		checkbox rotCbox "Import rotation" checked: true		
+		checkbox rotCbox "Import rotation" checked: true
+		checkbox relPosCbox "Make positions relative to geom. center" checked: true		
 		button cmdImport "Apply UE3 transformation" width: 140
 	)
 	on cmdImport pressed do
 	(
-		ApplyUE posCbox.state rotCbox.state
+		ApplyUE posCbox.state rotCbox.state relPosCbox.state
 	)
 )
 
@@ -114,7 +124,7 @@ rollout rAbout "About"
 	label lab1 "UE3 Transformation Clipboard Importer"
 	label lab2 "Author: michal@traal.eu"
 	label lab3 "http://traal.eu"
-	label lab4 "Script version: 0.1"
+	label lab4 "Script version: 0.2.0"
 	-- needs parser Version!
 )
 

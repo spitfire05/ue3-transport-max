@@ -20,7 +20,7 @@ namespace UE3Handler
             int patch = Assembly.GetExecutingAssembly().GetName().Version.Build;
             return String.Format("{0}.{1}.{2}", major, minor, patch);
         }
-        
+
         public static List<Actor> parseFromClipboard()
         {
             return parse(Clipboard.GetText());
@@ -136,6 +136,29 @@ namespace UE3Handler
                         continue;
                     }
                 }
+            }
+            return actors;
+        }
+
+        public static List<Actor> convertVectorsToRelativeFromGeometricalCenter(List<Actor> actors)
+        {
+            if (actors.Count == 0)
+            {
+                return actors;
+            }
+
+            // find the vector of geometrical center
+            var gcenter = new double3();
+            foreach (var a in actors)
+            {
+                gcenter += a.Location;
+            }
+            gcenter /= actors.Count;
+
+            // Now make all the actors' vectors relative from the gcenter
+            foreach (var a in actors)
+            {
+                a.Location = a.Location - gcenter;
             }
             return actors;
         }
