@@ -17,7 +17,7 @@ namespace UE3Handler
         {
             int major = Assembly.GetExecutingAssembly().GetName().Version.Major;
             int minor = Assembly.GetExecutingAssembly().GetName().Version.Minor;
-            int patch = Assembly.GetExecutingAssembly().GetName().Version.MajorRevision;
+            int patch = Assembly.GetExecutingAssembly().GetName().Version.Build;
             return String.Format("{0}.{1}.{2}", major, minor, patch);
         }
         
@@ -130,9 +130,9 @@ namespace UE3Handler
                         double.TryParse(matches[0].Groups[2].Value, out y);
                         double.TryParse(matches[0].Groups[3].Value, out z);
 
-                        curActor.Position.x = x;
-                        curActor.Position.y = y;
-                        curActor.Position.z = z;
+                        curActor.Location.x = x;
+                        curActor.Location.y = y;
+                        curActor.Location.z = z;
                         continue;
                     }
                 }

@@ -18,6 +18,14 @@
 --    along with this program; if not, write to the Free Software
 --    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+clearlistener()
+
+Assembly = dotNetClass "System.Reflection.Assembly"
+-- DLL path is not script dependant, until I find a solution to do so
+Assembly.loadfrom("Scripts\Startup\UE3Handler.dll")
+parser = dotNetClass "UE3Handler.ParserStub"
+format "Parser version: %\n" (parser.getVersion())
+
 ------------------------------------------------------
 -- Set the given object's rotation to the given values
 -- Source: http://lifeonthefrontier.blogspot.com/2009/04/it-is-very-surprising-to-me-how-hard-it.html
@@ -37,56 +45,80 @@ fn SetObjectRotation obj rx ry rz =
     rotate obj (angleaxis rz [0,0,1])
 )
 
-clearlistener()
-
-Assembly = dotNetClass "System.Reflection.Assembly"
--- DLL path is not script dependant, until I find a solution to do so
-Assembly.loadfrom("Scripts\Startup\UE3Handler.dll")
-
-macroscript UE3ClipBoardRotation category:"spitfire" \
-tooltip:"Get rotation from cliboard" \
-buttontext: "Get rotation from cliboard"
+fn ApplyUE pos rot =
 (
-	on execute do
+	result = parser.parseFromClipboard()
+	r = result.ToArray()
+	for obj in (r) do
 	(
-		try
+		print obj.Name
+		print (obj.Location.ToString())
+		print (obj.Rotation.ToString())
+		
+		maxObj = (getNodeByName obj.Name)
+		if maxObj != undefined then
 		(
-			parser = dotNetClass "UE3Handler.ParserStub"
-			result = parser.parseFromClipboard()
-			r = result.ToArray()
-			for obj in (r) do
+			if pos then
 			(
-				format "% -- % % %\n" obj.Name obj.Rotation.x obj.Rotation.y obj.Rotation.z
-				
-				maxObj = (getNodeByName obj.Name)
-				if maxObj != undefined then
-				(
-					SetObjectRotation (getNodeByName obj.Name) obj.Rotation.z obj.Rotation.x obj.Rotation.y
-				)--end if
-				else
-				(
-					messagebox ("No object found: " + obj.Name)
-				)--end else
-			)--end for
-		) catch (
-			messagebox (getCurrentException())
-		)
-	)--end on execute
-)--end macroscript
+				maxObj.position = [obj.Location.x, obj.Location.y, obj.Location.z]
+			)--end if
+			if rot then
+			(
+				SetObjectRotation maxObj obj.Rotation.z obj.Rotation.x obj.Rotation.y
+			)--end if
+		)--end if
+		else
+		(
+			messagebox ("No object found: " + obj.Name)
+		)--end else
+	)--end for
+)--end function
 
-macroscript UE3ClipBoardRotationAbout category:"spitfire" \
-tooltip:"About" \
-buttontext: "About"
+-- main macroscript
+macroscript UE3ClipBoardRotation category:"spitfire" \
+tooltip:"Open dialog..." \
+buttontext: "Open dialog..."
 (
+	global cmImp
 	on execute do
 	(
-		parser = dotNetClass "UE3Handler.ParserStub"
-		messagebox ("UE3 Rotation Clipboard\n\nhttp://traal.eu\n\nAuthor: michal@traal.eu\nScript version: 0.1\nParser version: " + (parser.getVersion()))
+		try (removeRollout rUE) catch ()
+		try (removeRollout rAbout) catch ()
+		try (closeRolloutFloter cmImp) catch ()
+		cmImp = newRolloutFloater "UE3 Transformation Clipboard" 210 150
+		print cmImp
+		print rUE
+		print rAbout
+		addRollout rUE cmImp
+		addRollout rAbout cmImp rolledup:true
 	)--end on execute
 )--end macroscript
 
--- add UI
-subMenuName = "UE3 Rotation Clipboard"
+-- GUI
+rollout rUE "UE3 Transformation Clipboard"
+(
+	group "Import"
+	(
+		checkbox posCbox "Import position" checked: true
+		checkbox rotCbox "Import rotation" checked: true		
+		button cmdImport "Apply UE3 transformation" width: 140
+	)
+	on cmdImport pressed do
+	(
+		ApplyUE posCbox.state rotCbox.state
+	)
+)
+
+rollout rAbout "About"
+(
+	label lab1 "UE3 Transformation Clipboard Importer"
+	label lab2 "Author: michal@traal.eu"
+	label lab3 "http://traal.eu"
+	label lab4 "Script version: 0.1"
+	-- needs parser Version!
+)
+
+subMenuName = "UE3 Transformation Clipboard"
 
 -- clean up old menu
 if ((menuMan.findMenu subMenuName) != undefined) then 
@@ -99,8 +131,6 @@ mainMenuBar = menuMan.getMainMenuBar()
 subMenu = menuMan.createMenu subMenuName
 
 testItem = menuMan.createActionItem "UE3ClipBoardRotation" "spitfire"
-subMenu.addItem testItem -1
-testItem = menuMan.createActionItem "UE3ClipBoardRotationAbout" "spitfire"
 subMenu.addItem testItem -1
 
 subMenuItem = menuMan.createSubMenuItem "Test Menu" subMenu
