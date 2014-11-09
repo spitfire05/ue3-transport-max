@@ -43,13 +43,6 @@ Assembly = dotNetClass "System.Reflection.Assembly"
 -- DLL path is not script dependant, until I find a solution to do so
 Assembly.loadfrom("Scripts\Startup\UE3Handler.dll")
 
-rollout rAbout "About"
-(
- label lab1 "BF2 ColMesh Importer"
- label lab2 "Version 1.2.0"
- label lab3 "Copyright © Martijn Buijs, 2008"
-)
-
 macroscript UE3ClipBoardRotation category:"spitfire" \
 tooltip:"Get rotation from cliboard" \
 buttontext: "Get rotation from cliboard"
