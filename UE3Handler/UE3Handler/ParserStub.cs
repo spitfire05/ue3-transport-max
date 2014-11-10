@@ -29,12 +29,14 @@ namespace UE3Handler
         public static List<Actor> parse(string data)
         {
             var nameRegex = new Regex("Name=\"(.*)\"");
+            var staticMeshRegex = new Regex(@"StaticMesh=StaticMesh'(.*)'");
             var rotationRegex = new Regex(@"Rotation=\(Pitch=(-?\d+),Yaw=(-?\d+),Roll=(-?\d+)\)");
             var positionRegex = new Regex(@"Location=\(X=(-?\d+.?\d*),Y=(-?\d+.?\d*),Z=(-?\d+.?\d*)\)");
+            var drawscaleRegex = new Regex(@"DrawScale3D=\(X=(-?\d+.?\d*),Y=(-?\d+.?\d*),Z=(-?\d+.?\d*)\)");
 
             var actors = new List<Actor>();
 
-            // Mkae sure we read the numbers correctly
+            // Make sure we read the numbers correctly
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
             using (StringReader reader = new StringReader(data))
@@ -86,6 +88,18 @@ namespace UE3Handler
                         --obj;
                     }
 
+                    // First-level object
+                    if (curActor != null && obj == 1)
+                    {
+                        // Find static mesh name
+                        if (staticMeshRegex.IsMatch(line))
+                        {
+                            var matches = staticMeshRegex.Matches(line);
+                            curActor.StaticMeshName = matches[0].Groups[1].Value;
+                            continue;
+                        }
+                    }
+
                     // Check here if we are in actor definition, and not in any children objects
                     if (curActor == null || obj > 0)
                     {
@@ -133,6 +147,21 @@ namespace UE3Handler
                         curActor.Location.x = x;
                         curActor.Location.y = y;
                         curActor.Location.z = z;
+                        continue;
+                    }
+
+                    // Drawscale3D
+                    if (drawscaleRegex.IsMatch(line))
+                    {
+                        var matches = drawscaleRegex.Matches(line);
+                        double x, y, z;
+                        double.TryParse(matches[0].Groups[1].Value, out x);
+                        double.TryParse(matches[0].Groups[2].Value, out y);
+                        double.TryParse(matches[0].Groups[3].Value, out z);
+
+                        curActor.Drawscale.x = x;
+                        curActor.Drawscale.y = y;
+                        curActor.Drawscale.z = z;
                         continue;
                     }
                 }

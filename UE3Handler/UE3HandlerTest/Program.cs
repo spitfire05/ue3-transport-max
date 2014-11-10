@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UE3Handler;
+using System.IO;
 
 namespace UE3HandlerTest
 {
@@ -13,7 +14,9 @@ namespace UE3HandlerTest
         {
             Console.WriteLine(String.Format("Version: {0}", ParserStub.getVersion()));
 
-            var x = ParserStub.parse("Begin Map\nBegin Actor\nLocation=(X=2595.519531,Y=-2716.238281,Z=222.000000)\nRotation=(Pitch=01,Yaw=-77312,Roll=2)\nName=\"ROStaticMeshDestructible_318\"\nEnd Actor\nEnd Map\n");
+            var reader = new StreamReader("test.txt");
+
+            var x = ParserStub.parse(reader.ReadToEnd());
             
             Console.WriteLine(x.Count);
             foreach (var xx in x)

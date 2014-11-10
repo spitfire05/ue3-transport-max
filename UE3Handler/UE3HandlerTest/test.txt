@@ -1,0 +1,50 @@
+﻿Begin Map
+   Begin Level
+      Begin Actor Class=ROStaticMeshObstacle Name=ROStaticMeshObstacle_1 Archetype=ROStaticMeshObstacle'ROGame.Default__ROStaticMeshObstacle'
+         Begin Object Class=StaticMeshComponent Name=StaticMeshComponent0 ObjName=StaticMeshComponent_5 Archetype=StaticMeshComponent'ROGame.Default__ROStaticMeshObstacle:StaticMeshComponent0'
+            StaticMesh=StaticMesh'MyPackage.spitobjects_Object_2'
+            WireframeColor=(B=0,G=255,R=255,A=255)
+            ReplacementPrimitive=None
+            bAllowApproximateOcclusion=True
+            bForceDirectLightMap=True
+            bUsePrecomputedShadows=True
+            LightingChannels=(bInitialized=True,Static=True)
+            Name="StaticMeshComponent_5"
+            ObjectArchetype=StaticMeshComponent'ROGame.Default__ROStaticMeshObstacle:StaticMeshComponent0'
+         End Object
+         StaticMeshComponent=StaticMeshComponent'StaticMeshComponent_5'
+         Components(0)=StaticMeshComponent'StaticMeshComponent_5'
+         Location=(X=-1270.311523,Y=-569.366577,Z=560.144043)
+         DrawScale3D=(X=0.100000,Y=1.000000,Z=1.000000)
+         CreationTime=9.824544
+         Tag="ROStaticMeshObstacle"
+         CollisionComponent=StaticMeshComponent'StaticMeshComponent_5'
+         Name="ROStaticMeshObstacle_1"
+         ObjectArchetype=ROStaticMeshObstacle'ROGame.Default__ROStaticMeshObstacle'
+      End Actor
+      Begin Actor Class=ROStaticMeshObstacle Name=ROStaticMeshObstacle_3 Archetype=ROStaticMeshObstacle'ROGame.Default__ROStaticMeshObstacle'
+         Begin Object Class=StaticMeshComponent Name=StaticMeshComponent0 ObjName=StaticMeshComponent_7 Archetype=StaticMeshComponent'ROGame.Default__ROStaticMeshObstacle:StaticMeshComponent0'
+            StaticMesh=StaticMesh'MyPackage.spitobjects_Object_2'
+            WireframeColor=(B=0,G=255,R=255,A=255)
+            ReplacementPrimitive=None
+            bAllowApproximateOcclusion=True
+            bForceDirectLightMap=True
+            bUsePrecomputedShadows=True
+            LightingChannels=(bInitialized=True,Static=True)
+            Name="StaticMeshComponent_7"
+            ObjectArchetype=StaticMeshComponent'ROGame.Default__ROStaticMeshObstacle:StaticMeshComponent0'
+         End Object
+         StaticMeshComponent=StaticMeshComponent'StaticMeshComponent_7'
+         Components(0)=StaticMeshComponent'StaticMeshComponent_7'
+         Location=(X=-1200.712036,Y=-680.368408,Z=586.456665)
+         DrawScale3D=(X=0.500000,Y=1.000000,Z=1.000000)
+         CreationTime=51.676079
+         Tag="ROStaticMeshObstacle"
+         CollisionComponent=StaticMeshComponent'StaticMeshComponent_7'
+         Name="ROStaticMeshObstacle_3"
+         ObjectArchetype=ROStaticMeshObstacle'ROGame.Default__ROStaticMeshObstacle'
+      End Actor
+   End Level
+Begin Surface
+End Surface
+End Map
