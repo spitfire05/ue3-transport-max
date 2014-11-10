@@ -95,7 +95,12 @@ namespace UE3Handler
                         if (staticMeshRegex.IsMatch(line))
                         {
                             var matches = staticMeshRegex.Matches(line);
-                            curActor.StaticMeshName = matches[0].Groups[1].Value;
+                            var value = matches[0].Groups[1].Value;
+                            if (value.Contains("."))
+                            {
+                                value = value.Split('.')[1];
+                            }
+                            curActor.StaticMeshName = value;
                             continue;
                         }
                     }

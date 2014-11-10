@@ -28,6 +28,11 @@ namespace UE3Handler
             this.z = z_val;
         }
 
+        public override string ToString()
+        {
+            return String.Format("[{0}; {1}; {2}]", this.x, this.y, this.z);
+        }
+
         public double this[int index]
         {
             get
