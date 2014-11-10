@@ -45,7 +45,7 @@ fn SetObjectRotation obj rx ry rz =
     rotate obj (angleaxis rz [0,0,1])
 )
 
-fn ApplyUE pos rot relPos =
+fn ApplyUE pos rot scale relPos delSource =
 (
 	try
 	(
@@ -55,29 +55,49 @@ fn ApplyUE pos rot relPos =
 			result = parser.convertVectorsToRelativeFromGeometricalCenter(result)
 		)--end if
 		r = result.ToArray()
+		n = 0
 		for obj in (r) do
 		(
+			n = n + 1
+			
 			print obj.Name
 			print (obj.Location.ToString())
 			print (obj.Rotation.ToString())
 			
-			maxObj = (getNodeByName obj.Name)
+			maxObj = (getNodeByName obj.StaticMeshName)
 			if maxObj != undefined then
 			(
+				maxOps.cloneNodes maxObj cloneType:#copy newNodes:&nnl #nodialog
+				nnl[1].name = (maxObj.name + "_" + (n as string))
 				if pos then
 				(
-					maxObj.position = [obj.Location.x, obj.Location.y, obj.Location.z]
+					nnl[1].position = [obj.Location.x, obj.Location.y, obj.Location.z]
 				)--end if
 				if rot then
 				(
-					SetObjectRotation maxObj obj.Rotation.z obj.Rotation.x obj.Rotation.y
+					SetObjectRotation nnl[1] obj.Rotation.z obj.Rotation.x obj.Rotation.y
+				)--end if
+				if scale then
+				(
+					nnl[1].scale = [obj.Drawscale.x, obj.Drawscale.y, obj.Drawscale.z]
 				)--end if
 			)--end if
 			else
 			(
-				messagebox ("No object found: " + obj.Name)
+				messagebox ("No object found: " + obj.StaticMeshName)
 			)--end else
 		)--end for
+		if delSource then
+		(
+			for obj in (r) do
+			(
+				maxObj = (getNodeByName obj.StaticMeshName)
+				if maxObj != undefined then
+				(
+					delete maxObj
+				)--end if
+			)--end for
+		)--end if
 	) catch (
 		messagebox (getCurrentException())
 	)
@@ -94,7 +114,7 @@ buttontext: "Open dialog..."
 		try (removeRollout rUE) catch ()
 		try (removeRollout rAbout) catch ()
 		try (closeRolloutFloter cmImp) catch ()
-		cmImp = newRolloutFloater "UE3 Transformation Clipboard" 240 180
+		cmImp = newRolloutFloater "UE3 Transformation Clipboard" 240 220
 		print cmImp
 		print rUE
 		print rAbout
@@ -110,12 +130,14 @@ rollout rUE "UE3 Transformation Clipboard"
 	(
 		checkbox posCbox "Import position" checked: true
 		checkbox rotCbox "Import rotation" checked: true
-		checkbox relPosCbox "Make positions relative to geom. center" checked: true		
+		checkbox scaleCbox "Import drawscale" checked: true
+		checkbox relPosCbox "Make positions relative to geom. center" checked: true
+		checkbox delSource "Delete source objects" checked: true	
 		button cmdImport "Apply UE3 transformation" width: 140
 	)
 	on cmdImport pressed do
 	(
-		ApplyUE posCbox.state rotCbox.state relPosCbox.state
+		ApplyUE posCbox.state rotCbox.state scaleCbox.state relPosCbox.state delSource.state
 	)
 )
 
@@ -124,11 +146,11 @@ rollout rAbout "About"
 	label lab1 "UE3 Transformation Clipboard Importer"
 	label lab2 "Author: michal@traal.eu"
 	label lab3 "http://traal.eu"
-	label lab4 "Script version: 0.2.0"
+	label lab4 "Script version: 0.3.0"
 	-- needs parser Version!
 )
 
-subMenuName = "UE3 Transformation Clipboard"
+subMenuName = "UE3 TC"
 
 -- clean up old menu
 if ((menuMan.findMenu subMenuName) != undefined) then 
