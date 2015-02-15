@@ -1,6 +1,8 @@
 ue3-transport-max
 ============================
 
+**WARNIG**: Current version of the script has a nasty transform translation bug. I'll try to fix it as soon as I have time to do so, until then, the script reamins **not ready for everyday use**.
+
 A script reading objects' rotation from UE3 clipboard and applying it to objects in 3ds Max
 
 ![screenshot](https://raw.githubusercontent.com/spitfire05/ue3-2-max-transformation-clipboard/master/screenshot.JPG)
